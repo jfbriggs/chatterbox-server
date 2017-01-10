@@ -11,6 +11,19 @@ this file and include it in basic-server.js so that it actually works.
 *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html.
 
 **************************************************************/
+
+var Chance = require('chance');
+var chance = new Chance();
+
+// Add unique ID function
+var addUniqueInfo = function(object) {
+  object['objectId'] = chance.string({length: 10});
+  var date = new Date();
+  date.toISOString();
+  object['createdAt'] = date; 
+  return object;
+};
+
 // Create storage
 var database = [];
 
@@ -25,7 +38,7 @@ var database = [];
 // client from this domain by setting up static file serving.
 var defaultCorsHeaders = {
   'access-control-allow-origin': '*',
-  'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'access-control-allow-methods': 'GET, POST, OPTIONS',
   'access-control-allow-headers': 'content-type, accept',
   'access-control-max-age': 10 // Seconds.
 };
@@ -50,29 +63,28 @@ var requestHandler = function(request, response) {
 
   // The outgoing status.
   var statusCode = 200;
-
   var headers = request.headers;
   var method = request.method;
   var url = request.url;
-  console.log(url);
 
   // If request is valid respond with status 201
   if (url !== '/classes/messages') {
     statusCode = 404;
     console.error('Wrong URL');
+
   } else if (request.method === 'POST') {
-    console.log('POST request: current data ', database);
     statusCode = 201;
     var body = '';
     request.on('data', function(data) {
       body += data;
     });
     request.on('end', function() {
-      database.push(JSON.parse(body));
+      var parsedBody = JSON.parse(body);
+      parsedBody = addUniqueInfo(parsedBody);
+      database.push(parsedBody);
     });
     
-  } else if (request.method === 'GET') {
-    console.log('GET request: current data ', database);
+  } else if (request.method === 'GET' || request.method === 'OPTIONS') {
     statusCode = 200;
   }
 
@@ -96,16 +108,21 @@ var requestHandler = function(request, response) {
   //
   // Calling .end "flushes" the response's internal buffer, forcing
   // node to actually send all the data over to the client.
-  var responseBody = {results: database};
-  // response.write();
-  response.end(JSON.stringify(responseBody));
+
+  if (request.method === 'OPTIONS') {
+    console.log(headers);
+    response.end(JSON.stringify(headers));
+  } else {
+    var responseBody = {results: database};
+    response.end(JSON.stringify(responseBody));
+  }
+
 };
-
-
 
 module.exports.requestHandler = requestHandler;
 module.exports.database = database;
 module.exports.defaultCorsHeaders = defaultCorsHeaders;
+module.exports.addUniqueInfo = addUniqueInfo;
 
 
 

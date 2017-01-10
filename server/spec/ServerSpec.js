@@ -116,35 +116,54 @@ describe('Node Server Request Listener Function', function() {
       });
   });
 
-  // Should add data in the proper order
-  // it('Should add data in the order it was entered', function() {
-  //   // create 3 stub message objects
-  //   var messages = [{
-  //     username: 'Justin',
-  //     message: 'Spinach juice!'},
-  //   { username: 'Peter',
-  //     message: 'Mad tight!'},
-  //   { username: 'Oleg',
-  //     message: 'Test your stuff.'}];
+  // Should return options
+  it('Should successfuly serve OPTIONS requests with data', function() {
+    var req = new stubs.request('/classes/messages', 'OPTIONS');
+    var res = new stubs.response();
+    handler.requestHandler(req, res);
+    expect(res._responseCode).to.equal(200);
+    var parsedBody = JSON.parse(res._data);
+    expect(parsedBody).to.be.an('object');
+    expect(parsedBody['access-control-allow-headers']).to.equal('content-type, accept');
+    expect(res._ended).to.equal(true);    
+  });
 
-  //   var req1 = new stubs.request('/classes/messages', 'POST', messages[0]);
-  //   var req2 = new stubs.request('/classes/messages', 'POST', messages[1]);
-  //   var req3 = new stubs.request('/classes/messages', 'POST', messages[2]);
+  // it ('Should add roomname to incoming messages', function() {
+  //   var stubMsg = {
+  //     username: 'Jono',
+  //     message: 'Do my bidding!',
+  //     roomname: 'lobby'
+  //   };
+
+  //   var req = new stubs.request('/classes/messages', 'POST', stubMsg);
+  //   var res = new stubs.response();
+  //   handler.requestHandler(req, res);
+
+  //   req = new stubs.request('/classes/messages', 'GET');
+  //   res = new stubs.response();
+  //   handler.requestHandler(req, res);
+
   //   var messages = JSON.parse(res._data).results;
-  //   expect(messages[0].username).to.equal('Justin');
-  //   expect(messages[1].username).to.equal('Peter');
-  //   expect(messages[2].username).to.equal('Oleg');
-  //   // res = new stubs.response();
-
-  //   // handler.requestHandler(req1, res);
-  //   // handler.requestHandler(req2, res);
-  //   // handler.requestHandler(req3, res);
-
-
-
+  //   expect(messages[0].roomname).to.equal('lobby');
+  //   expect(res._ended).to.equal(true);
+    
   // });
 
-  // Should return options
+  // it ('Should add identifying information to incoming messages', function() {
+  //   var stubMsg = {
+  //     username: 'Jono',
+  //     message: 'Do my bidding!',
+  //     roomname: 'lobby'
+  //   };
+  //   stubMsg = handler.addUniqueInfo(stubMsg);
+  //   expect(stubMsg.objectId.length).to.equal(10);
+  //   expect(stubMsg.createdAt).to.be.a('string');
+  // });
+
+  // Should handle queries
+    // Should sort data by timestamp
+    // Should filter data by room
+
 
 });
 

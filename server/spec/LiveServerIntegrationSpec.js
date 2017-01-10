@@ -74,13 +74,65 @@ describe('server', function() {
   });
 
 
-  // Should add identifying information to incoming messages
-    // Should add a unique ID to incoming messages
-    // Should add a timestamp to incoming messages
+  it('Should store data in the order it was entered', function(done) {
+    // create 3 stub message objects
+    var requests = [{method: 'POST',
+      uri: 'http://127.0.0.1:3000/classes/messages',
+      json: {
+        username: 'Justin',
+        message: 'Spinach Juice!'}},
+    {method: 'POST',
+      uri: 'http://127.0.0.1:3000/classes/messages',
+      json: {
+        username: 'Peter',
+        message: 'Mad tight!'}},
+    {method: 'POST',
+      uri: 'http://127.0.0.1:3000/classes/messages',
+      json: {
+        username: 'Oleg',
+        message: 'Run tests!'}}];
 
-  // Should handle queries
-    // Should sort data by timestamp
-    // Should filter data by room
+    request(requests[0], function(error, response, body) {
+      request(requests[1], function(error, response, body) {
+        request(requests[2], function(error, response, body) {
+          request('http://127.0.0.1:3000/classes/messages', function(error, response, body) {
+            var messages = JSON.parse(body).results;
+            expect(messages[messages.length - 3].username).to.equal('Justin');
+            expect(messages[messages.length - 2].username).to.equal('Peter');
+            expect(messages[messages.length - 1].username).to.equal('Oleg');
+            done();
+          });
+        });
+      });
+    });
+
+  });
 
 
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
