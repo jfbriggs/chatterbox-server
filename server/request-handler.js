@@ -52,12 +52,27 @@ var requestHandler = function(request, response) {
   var statusCode = 200;
 
   var headers = request.headers;
+  var method = request.method;
+  var url = request.url;
+  console.log(url);
 
   // If request is valid respond with status 201
-  if (request.method === 'POST') {
+  if (url !== '/classes/messages') {
+    statusCode = 404;
+    console.error('Wrong URL');
+  } else if (request.method === 'POST') {
+    console.log('POST request: current data ', database);
     statusCode = 201;
-    database.push(request.json);
+    var body = '';
+    request.on('data', function(data) {
+      body += data;
+    });
+    request.on('end', function() {
+      database.push(JSON.parse(body));
+    });
+    
   } else if (request.method === 'GET') {
+    console.log('GET request: current data ', database);
     statusCode = 200;
   }
 
