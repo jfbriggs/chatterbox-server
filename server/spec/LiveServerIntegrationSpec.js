@@ -74,4 +74,13 @@ describe('server', function() {
   });
 
 
+  // Should add identifying information to incoming messages
+    // Should add a unique ID to incoming messages
+    // Should add a timestamp to incoming messages
+
+  // Should handle queries
+    // Should sort data by timestamp
+    // Should filter data by room
+
+
 });

@@ -116,4 +116,56 @@ describe('Node Server Request Listener Function', function() {
       });
   });
 
+  // Should add data in the proper order
+  // it('Should add data in the order it was entered', function() {
+  //   // create 3 stub message objects
+  //   var messages = [{
+  //     username: 'Justin',
+  //     message: 'Spinach juice!'},
+  //   { username: 'Peter',
+  //     message: 'Mad tight!'},
+  //   { username: 'Oleg',
+  //     message: 'Test your stuff.'}];
+
+  //   var req1 = new stubs.request('/classes/messages', 'POST', messages[0]);
+  //   var req2 = new stubs.request('/classes/messages', 'POST', messages[1]);
+  //   var req3 = new stubs.request('/classes/messages', 'POST', messages[2]);
+  //   var messages = JSON.parse(res._data).results;
+  //   expect(messages[0].username).to.equal('Justin');
+  //   expect(messages[1].username).to.equal('Peter');
+  //   expect(messages[2].username).to.equal('Oleg');
+  //   // res = new stubs.response();
+
+  //   // handler.requestHandler(req1, res);
+  //   // handler.requestHandler(req2, res);
+  //   // handler.requestHandler(req3, res);
+
+
+
+  // });
+
+  // Should return options
+
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
