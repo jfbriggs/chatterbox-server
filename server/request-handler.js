@@ -11,7 +11,6 @@ this file and include it in basic-server.js so that it actually works.
 *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html.
 
 **************************************************************/
-
 var Chance = require('chance');
 var chance = new Chance();
 
@@ -63,14 +62,12 @@ var requestHandler = function(request, response) {
 
   // The outgoing status.
   var statusCode = 200;
-  var headers = request.headers;
-  var method = request.method;
   var url = request.url;
 
   // If request is valid respond with status 201
   if (url !== '/classes/messages') {
     statusCode = 404;
-    console.error('Wrong URL');
+    console.error('Wrong URL.');
 
   } else if (request.method === 'POST') {
     statusCode = 201;
@@ -80,12 +77,13 @@ var requestHandler = function(request, response) {
     });
     request.on('end', function() {
       var parsedBody = JSON.parse(body);
-      parsedBody = addUniqueInfo(parsedBody);
-      database.push(parsedBody);
+      dataToPush = addUniqueInfo(parsedBody);
+      database.push(dataToPush); 
     });
     
-  } else if (request.method === 'GET' || request.method === 'OPTIONS') {
-    statusCode = 200;
+  } else if (request.method !== 'GET' && request.method !== 'OPTIONS') {
+    statusCode === 404;
+    console.error('Disallowed request type.');
   }
 
   // See the note below about CORS headers.
